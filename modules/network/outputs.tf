@@ -1,14 +1,14 @@
 output "vpc_id" {
-  description = "ID da VPC criada no módulo de rede"
+  description = "O ID da VPC criada para o projeto."
   value       = aws_vpc.main.id
 }
 
 output "subnet_id" {
-  description = "ID da Subnet criada no módulo de rede"
+  description = "O ID da Subnet pública onde os recursos de computação serão alocados."
   value       = aws_subnet.public.id
 }
 
 output "security_group_id" {
-  description = "ID do Security Group criado no módulo de rede"
+  description = "O ID do Security Group configurado para permitir tráfego na porta 80."
   value       = aws_security_group.allow_web.id
 }

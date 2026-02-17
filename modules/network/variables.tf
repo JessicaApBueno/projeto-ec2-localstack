@@ -1,8 +1,9 @@
 variable "project_name" {
-  type = string
+  description = "Nome do projeto herdado do módulo raiz para manter a consistência de nomes."
+  type        = string
 }
 
 variable "vpc_cidr" {
-  type    = string
-  default = "10.0.0.0/16"
+  description = "CIDR block recebido do módulo raiz para configurar a VPC."
+  type        = string
 }
