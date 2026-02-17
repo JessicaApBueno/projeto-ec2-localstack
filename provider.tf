@@ -1,5 +1,4 @@
 terraform {
-  required_version = ">= 1.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -9,7 +8,7 @@ terraform {
 }
 
 provider "aws" {
-  region                      = var.aws_region
+  region                      = var.region
   access_key                  = "test"
   secret_key                  = "test"
   skip_credentials_validation = true
@@ -17,9 +16,6 @@ provider "aws" {
   skip_requesting_account_id  = true
 
   endpoints {
-    ec2    = "http://localhost:4566"
-    s3     = "http://localhost:4566"
-    sts    = "http://localhost:4566"
-    iam    = "http://localhost:4566"
+    ec2 = "http://localhost:4566"
   }
 }

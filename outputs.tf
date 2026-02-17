@@ -1,14 +1,9 @@
-output "vpc_id" {
-  description = "O identificador único da VPC criada."
-  value       = aws_vpc.main.id
+output "web_instance_id" {
+  description = "ID da instância EC2 criada."
+  value       = aws_instance.web.id
 }
 
-output "subnet_id" {
-  description = "O identificador da Subnet pública criada no módulo."
-  value       = aws_subnet.public.id
-}
-
-output "security_group_id" {
-  description = "O ID do Security Group configurado para tráfego web."
-  value       = aws_security_group.allow_web.id
+output "web_instance_state" {
+  description = "Estado atual da instância EC2."
+  value       = aws_instance.web.instance_state
 }
