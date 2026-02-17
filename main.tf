@@ -9,18 +9,6 @@ resource "aws_instance" "web" {
   subnet_id     = module.network.subnet_id
   vpc_security_group_ids = [module.network.security_group_id]
 
-  depends_on = [module.network]
-
-  root_block_device {
-    encrypted = true
-  }
-
-  metadata_options {
-    http_endpoint               = "enabled"
-    http_tokens                 = "required"
-    http_put_response_hop_limit = 1
-  }
-
   user_data = <<-EOF
               #!/bin/bash
               apt-get update && apt-get install -y nginx

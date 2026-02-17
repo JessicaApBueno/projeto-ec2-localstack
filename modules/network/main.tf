@@ -11,22 +11,19 @@ resource "aws_subnet" "public" {
 
 resource "aws_security_group" "allow_web" {
   name        = "allow_web"
-  description = "Permite trafego HTTP de entrada"
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    description = "HTTP de qualquer lugar"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # tfsec:ignore:aws-ec2-no-public-ingress-sgr
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
-    description = "Saida permitida"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"] # tfsec:ignore:aws-ec2-no-public-egress-sgr
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }

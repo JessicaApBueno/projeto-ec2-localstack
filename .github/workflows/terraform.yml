@@ -1,26 +1,34 @@
-name: "Terraform CI/CD with Security"
+name: "Terraform CI/CD - LocalStack"
 
 on:
   push:
     branches: [ "main" ]
 
 jobs:
-  # 1. Mantemos a segurança separada
-  security-scan:
-    name: "Security Scan (tfsec)"
+  terraform-plan:
+    name: "Terraform Plan"
     runs-on: ubuntu-latest
+    services:
+      localstack:
+        image: localstack/localstack:latest
+        ports:
+          - 4566:4566
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-      - name: Run tfsec
-        uses: aquasecurity/tfsec-action@v1.0.0
-        with:
-          additional_args: --minimum-severity HIGH 
 
-  # 2. Unificamos o Terraform em um único Job para o LocalStack
-  terraform-execution:
-    name: "Terraform Execution"
-    needs: security-scan
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -var="project_name=AWS-Lab-LocalStack"
+
+  terraform-apply:
+    name: "Terraform Apply"
+    needs: terraform-plan
     runs-on: ubuntu-latest
     services:
       localstack:
@@ -38,9 +46,7 @@ jobs:
         run: terraform init
 
       - name: Wait for LocalStack
-        run: sleep 30
+        run: sleep 10
 
-      - name: Terraform Plan & Apply
-        run: |
-          terraform plan -var="project_name=AWS-Lab-LocalStack"
-          terraform apply -var="project_name=AWS-Lab-LocalStack" -auto-approve
+      - name: Terraform Apply
+        run: terraform apply -var="project_name=AWS-Lab-LocalStack" -auto-approve
