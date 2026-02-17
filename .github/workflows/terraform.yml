@@ -52,5 +52,8 @@ jobs:
         uses: hashicorp/setup-terraform@v3
       - name: Terraform Init
         run: terraform init
+      - name: Wait for LocalStack
+        # Aguarda 10 segundos para garantir a consistência do LocalStack
+        run: sleep 60
       - name: Terraform Apply
         run: terraform apply -var="project_name=AWS-Lab-LocalStack" -auto-approve
