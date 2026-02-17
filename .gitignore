@@ -1,0 +1,8 @@
+# Ignorar arquivos de estado local do Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+
+# Ignorar o arquivo de valores sensíveis (O QUE VOCÊ PERGUNTOU)
+terraform.tfvars
