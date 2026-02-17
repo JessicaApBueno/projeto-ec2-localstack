@@ -9,9 +9,16 @@ resource "aws_instance" "web" {
   subnet_id     = module.network.subnet_id
   vpc_security_group_ids = [module.network.security_group_id]
 
-  # Adicionando criptografia no disco raiz para passar no tfsec
+  # Segurança: Criptografia de disco
   root_block_device {
     encrypted = true
+  }
+
+  # Segurança: Exigir Tokens (IMDSv2) - Resolve Alerta HIGH
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
   }
 
   user_data = <<-EOF

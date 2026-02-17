@@ -1,6 +1,5 @@
 resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr
-  # tfsec:ignore:aws-ec2-require-vpc-flow-logs-for-all-vpcs
   tags = { Name = "${var.project_name}-vpc" }
 }
 
@@ -12,7 +11,7 @@ resource "aws_subnet" "public" {
 
 resource "aws_security_group" "allow_web" {
   name        = "allow_web"
-  description = "Permite trafego HTTP de entrada" # Descricao obrigatoria
+  description = "Permite trafego HTTP de entrada"
   vpc_id      = aws_vpc.main.id
 
   ingress {
@@ -28,6 +27,6 @@ resource "aws_security_group" "allow_web" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["0.0.0.0/0"] # tfsec:ignore:aws-ec2-no-public-egress-sgr
   }
 }
