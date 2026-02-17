@@ -1,4 +1,4 @@
-name: "Terraform CI/CD with LocalStack"
+name: "Terraform CI/CD with Security"
 
 on:
   push:
@@ -6,16 +6,30 @@ on:
   pull_request:
 
 jobs:
+  # 1. Caixinha de Segurança: tfsec
+  security-scan:
+    name: "Security Scan (tfsec)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run tfsec
+        uses: aquasecurity/tfsec-action@v1.0.0
+        with:
+          # soft_fail: false fará o pipeline parar se houver risco crítico
+          soft_fail: false 
+
+  # 2. Caixinha de Planejamento: Plan
   terraform-plan:
     name: "Terraform Plan"
+    needs: security-scan
     runs-on: ubuntu-latest
-    # Aqui iniciamos o LocalStack como um serviço do próprio GitHub Actions
     services:
       localstack:
         image: localstack/localstack:latest
         ports:
           - 4566:4566
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -23,7 +37,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_wrapper: false # Melhora a leitura de outputs em scripts
+          terraform_wrapper: false
 
       - name: Terraform Init
         run: terraform init
@@ -31,9 +45,10 @@ jobs:
       - name: Terraform Plan
         run: terraform plan
 
+  # 3. Caixinha de Execução: Apply
   terraform-apply:
     name: "Terraform Apply"
-    needs: terraform-plan # Só roda se o Plan passar
+    needs: terraform-plan
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     services:
@@ -41,7 +56,6 @@ jobs:
         image: localstack/localstack:latest
         ports:
           - 4566:4566
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
