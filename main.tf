@@ -9,12 +9,12 @@ resource "aws_instance" "web" {
   subnet_id     = module.network.subnet_id
   vpc_security_group_ids = [module.network.security_group_id]
 
-  # Segurança: Criptografia de disco
+  # Resolve alerta de segurança: Criptografia de disco
   root_block_device {
     encrypted = true
   }
 
-  # Segurança: Exigir Tokens (IMDSv2) - Resolve Alerta HIGH
+  # Resolve alerta de segurança HIGH: Exigir Tokens (IMDSv2)
   metadata_options {
     http_endpoint               = "enabled"
     http_tokens                 = "required"

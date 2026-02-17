@@ -14,8 +14,7 @@ jobs:
       - name: Run tfsec
         uses: aquasecurity/tfsec-action@v1.0.0
         with:
-          # Define que o job só falha se encontrar algo Crítico ou Alto
-          additional_args: --min-severity CRITICAL,HIGH 
+          additional_args: --minimum-severity HIGH 
 
   terraform-plan:
     name: "Terraform Plan"
